@@ -29,6 +29,7 @@ services:
       SESSION_DOMAIN: ".gofun.cloud"
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
       - "traefik.http.routers.api.rule=Host(`api.gofun.cloud`)"
       - "traefik.http.routers.api.entrypoints=websecure"
       - "traefik.http.routers.api.tls=true"
@@ -53,6 +54,7 @@ services:
     #   - ./admin-frontend/dist:/usr/share/nginx/admin
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
       # Frontend
       - "traefik.http.routers.frontend.rule=Host(`gofun.cloud`) || Host(`www.gofun.cloud`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
