@@ -1,16 +1,4 @@
 services:
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: gamedb
-      POSTGRES_USER: gameuser
-      POSTGRES_PASSWORD: gamepass
-      POSTGRES_HOST_AUTH_METHOD: trust
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - internal
-
   laravel:
     build:
       context: ./backend
@@ -21,10 +9,11 @@ services:
     #   - ./backend:/var/www/html
     environment:
       DB_CONNECTION: pgsql
-      DB_HOST: postgres
-      DB_DATABASE: gamedb
-      DB_USERNAME: gameuser
-      DB_PASSWORD: gamepass
+      DB_HOST: koows8s44c04cogskskgc4k0
+      DB_PORT: 5432
+      DB_DATABASE: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: uzqJdpo7pg5SejCVGgIb7SoNf8m5xabD9DVxA8gFtYeyn905YMSGWClaMC7SmUOo
       APP_URL: "https://api.gofun.cloud"
       SANCTUM_STATEFUL_DOMAINS: "gofun.cloud,www.gofun.cloud,admin.gofun.cloud"
       SESSION_DOMAIN: ".gofun.cloud"
@@ -36,8 +25,8 @@ services:
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.routers.api.tls.certresolver=letsencrypt"
       - "traefik.http.services.api.loadbalancer.server.port=8000"
-    depends_on:
-      - postgres
+    # depends_on:
+    #   - postgres
     networks:
       - internal
       - coolify
@@ -76,8 +65,8 @@ services:
       - internal
       - coolify
 
-volumes:
-  postgres_data:
+# volumes:
+#   postgres_data:
 
 networks:
   coolify:
