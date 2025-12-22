@@ -19,6 +19,12 @@
         <el-form-item label="確認密碼">
           <el-input v-model="form.password_confirmation" type="password" placeholder="請再次輸入密碼" show-password />
         </el-form-item>
+        
+        <!-- Turnstile Widget -->
+        <div class="turnstile-container">
+          <div class="cf-turnstile" :data-sitekey="siteKey" data-callback="onRegisterTurnstileSuccess"></div>
+        </div>
+
         <el-form-item>
           <el-button type="primary" @click="handleRegister" :loading="loading" style="width: 100%">註冊</el-button>
         </el-form-item>
@@ -31,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useAuthStore } from '../stores/auth'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
@@ -39,12 +45,30 @@ import type { FormInstance, FormRules } from 'element-plus'
 const authStore = useAuthStore()
 const loading = ref(false)
 const registerForm = ref<FormInstance>()
+const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
+const turnstileToken = ref('')
 
 const form = ref({
   username: '',
   name: '',
   password: '',
   password_confirmation: ''
+})
+
+onMounted(() => {
+  // Ensure Turnstile renders
+  if (window.turnstile) {
+    window.turnstile.render('.cf-turnstile', {
+      sitekey: siteKey,
+      callback: (token: string) => {
+        turnstileToken.value = token
+      }
+    })
+  } else {
+      (window as any).onRegisterTurnstileSuccess = (token: string) => {
+          turnstileToken.value = token
+      }
+  }
 })
 
 const rules = ref<FormRules>({
@@ -80,11 +104,19 @@ const rules = ref<FormRules>({
 const handleRegister = async () => {
   if (!registerForm.value) return
   
+  if (!turnstileToken.value && siteKey) {
+     ElMessage.warning('請完成驗證')
+     return
+  }
+
   await registerForm.value.validate(async (valid) => {
     if (valid) {
       loading.value = true
       try {
-        await authStore.register(form.value)
+        await authStore.register({
+            ...form.value,
+            'cf-turnstile-response': turnstileToken.value
+        })
         ElMessage.success('註冊成功')
       } catch (error: any) {
         ElMessage.error(error.response?.data?.message || '註冊失敗')
@@ -92,6 +124,8 @@ const handleRegister = async () => {
         if (error.response?.data?.errors) {
             console.log(error.response.data.errors)
         }
+        if (window.turnstile) window.turnstile.reset()
+        turnstileToken.value = ''
       } finally {
         loading.value = false
       }
@@ -99,6 +133,14 @@ const handleRegister = async () => {
   })
 }
 </script>
+
+<style scoped>
+.turnstile-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
 
 <style scoped>
 .register-container {
