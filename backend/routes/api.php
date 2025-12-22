@@ -9,12 +9,14 @@ use App\Http\Controllers\Api\HealthController;
 
 
 // 公開路由
-Route::get('/health', [HealthController::class, 'check']);
-Route::get('/health/db', [HealthController::class, 'checkDb']);
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/ping', function () {
-    return response()->json(['message' => 'pong']);
+Route::middleware('throttle:60,1')->group(function () {
+    Route::get('/health', [HealthController::class, 'check']);
+    Route::get('/health/db', [HealthController::class, 'checkDb']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/ping', function () {
+        return response()->json(['message' => 'pong']);
+    });
 });
 
 // 需要驗證的路由
