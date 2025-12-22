@@ -13,35 +13,40 @@ class AuthController extends Controller
     // 註冊
     public function register(Request $request)
     {
-        $rules = [
-            'username' => 'required|string|unique:users',
-            'name' => 'required|string',
-            'password' => 'required|string|min:6|confirmed',
-        ];
+        try {
+            $rules = [
+                'username' => 'required|string|unique:users',
+                'name' => 'required|string',
+                'password' => 'required|string|min:6|confirmed',
+            ];
 
-        // Only apply Turnstile validation if key is configured
-        if (config('services.turnstile.secret')) {
-            $rules['cf-turnstile-response'] = ['required', new Turnstile];
-        }
+            $request->validate($rules);
 
-        $request->validate($rules);
+            return DB::transaction(function () use ($request) {
+                $user = User::create([
+                    'username' => $request->username,
+                    'name' => $request->name,
+                    'password' => Hash::make($request->password),
+                    'balance' => 0, // 初始餘額
+                ]);
 
-        return DB::transaction(function () use ($request) {
-            $user = User::create([
-                'username' => $request->username,
-                'name' => $request->name,
-                'password' => Hash::make($request->password),
-                'balance' => 0, // 初始餘額
-            ]);
+                $token = $user->createToken('auth_token')->plainTextToken;
 
-            $token = $user->createToken('auth_token')->plainTextToken;
-
+                return response()->json([
+                    'message' => '註冊成功',
+                    'user' => $user,
+                    'token' => $token,
+                ], 201);
+            });
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Register error: ' . $e->getMessage());
             return response()->json([
-                'message' => '註冊成功',
-                'user' => $user,
-                'token' => $token,
-            ], 201);
-        });
+                'message' => 'Register failed: ' . $e->getMessage(),
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     // 登入
