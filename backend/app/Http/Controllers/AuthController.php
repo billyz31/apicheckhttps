@@ -74,7 +74,7 @@ class AuthController extends Controller
             ]);
         } catch (ValidationException $e) {
             throw $e;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('Login error: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Login failed: ' . $e->getMessage(),
