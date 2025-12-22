@@ -49,17 +49,10 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            $rules = [
+            $request->validate([
                 'username' => 'required|string',
                 'password' => 'required|string',
-            ];
-
-            // Only apply Turnstile validation if key is configured
-            if (config('services.turnstile.secret')) {
-                $rules['cf-turnstile-response'] = ['required', new Turnstile];
-            }
-
-            $request->validate($rules);
+            ]);
 
             $user = User::where('username', $request->username)->first();
 
