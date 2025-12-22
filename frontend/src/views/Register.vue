@@ -40,8 +40,6 @@ import type { FormInstance, FormRules } from 'element-plus'
 const authStore = useAuthStore()
 const loading = ref(false)
 const registerForm = ref<FormInstance>()
-const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
-const turnstileToken = ref('')
 
 const form = ref({
   username: '',
