@@ -138,9 +138,74 @@ onMounted(() => {
   }
 }
 
-
 .game-card {
   margin-bottom: 20px;
+  cursor: pointer;
+  transition: transform 0.3s;
+  height: 0;
+  padding-bottom: 100%; /* 1:1 Aspect Ratio */
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+}
+
+.game-card :deep(.el-card__body) {
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  width: 100%;
+  padding: 10px;
+}
+
+.game-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.game-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  white-space: nowrap;
+}
+
+.game-subtitle {
+  font-size: 14px;
+  color: #909399;
+}
+
+.maintenance {
+  cursor: not-allowed;
+  opacity: 0.7;
+  background-color: #f5f7fa;
+}
+
+@media (max-width: 480px) {
+  .game-icon {
+    font-size: 30px;
+  }
+  .game-title {
+    font-size: 16px;
+  }
+  .game-subtitle {
+    font-size: 12px;
+  }
 }
 </style>
