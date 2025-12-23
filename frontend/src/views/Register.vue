@@ -10,9 +10,6 @@
         <el-form-item label="帳號">
           <el-input v-model="form.username" placeholder="請輸入帳號" />
         </el-form-item>
-        <el-form-item label="暱稱">
-          <el-input v-model="form.name" placeholder="請輸入顯示暱稱" />
-        </el-form-item>
         <el-form-item label="密碼">
           <el-input v-model="form.password" type="password" placeholder="請輸入密碼" show-password />
         </el-form-item>
@@ -43,7 +40,6 @@ const registerForm = ref<FormInstance>()
 
 const form = ref({
   username: '',
-  name: '',
   password: '',
   password_confirmation: ''
 })
@@ -56,10 +52,6 @@ const rules = ref<FormRules>({
   username: [
     { required: true, message: '請輸入帳號', trigger: 'blur' },
     { min: 3, max: 20, message: '帳號長度應該在 3 到 20 個字符', trigger: 'blur' }
-  ],
-  name: [
-    { required: true, message: '請輸入暱稱', trigger: 'blur' },
-    { min: 2, max: 50, message: '暱稱長度應該在 2 到 50 個字符', trigger: 'blur' }
   ],
   password: [
     { required: true, message: '請輸入密碼', trigger: 'blur' },

@@ -16,7 +16,6 @@ class AuthController extends Controller
         try {
             $rules = [
                 'username' => 'required|string|unique:users',
-                'name' => 'required|string',
                 'password' => 'required|string|min:6|confirmed',
             ];
 
@@ -25,7 +24,7 @@ class AuthController extends Controller
             return DB::transaction(function () use ($request) {
                 $user = User::create([
                     'username' => $request->username,
-                    'name' => $request->name,
+                    'name' => $request->username,
                     'password' => Hash::make($request->password),
                     'balance' => 0, // 初始餘額
                 ]);
