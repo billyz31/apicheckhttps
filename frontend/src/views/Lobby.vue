@@ -1,7 +1,7 @@
 <template>
   <div class="lobby-container">
     <el-container>
-      <el-header class="header">
+      <el-header class="header" height="auto">
         <div class="logo">遊戲大廳</div>
         <div class="user-info" v-if="authStore.user">
           <span>餘額: ${{ authStore.user.balance }}</span>
@@ -115,7 +115,7 @@ onMounted(() => {
   align-items: center;
   background-color: #409EFF;
   color: white;
-  padding: 0 20px;
+  padding: 10px 20px;
 }
 .logo {
   font-size: 20px;
@@ -130,7 +130,6 @@ onMounted(() => {
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
-    padding: 10px;
     gap: 10px;
   }
   .user-info {
@@ -138,6 +137,7 @@ onMounted(() => {
     justify-content: center;
   }
 }
+
 
 .game-card {
   margin-bottom: 20px;
