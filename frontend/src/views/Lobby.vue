@@ -12,21 +12,15 @@
       </el-header>
       <el-main>
         <el-row :gutter="20">
-          <el-col :span="6">
-            <el-card class="game-card">
-              <template #header>老虎機 (Slot)</template>
-              <div class="game-content">
-                <el-button type="primary" @click="router.push('/slot')">進入遊戲</el-button>
-              </div>
+          <el-col :xs="12" :sm="8" :md="6" :lg="6">
+            <el-card class="game-card" shadow="hover" @click="router.push('/slot')">
+              <img src="/games/slot.png" alt="Slot Game" class="game-image" />
             </el-card>
           </el-col>
           
-          <el-col :span="6" v-for="i in 3" :key="i">
-            <el-card class="game-card">
-              <template #header>敬請期待 {{ i }}</template>
-              <div class="game-content">
-                <el-button type="info" disabled>維護中</el-button>
-              </div>
+          <el-col :xs="12" :sm="8" :md="6" :lg="6" v-for="i in 3" :key="i">
+            <el-card class="game-card maintenance">
+              <img :src="`/games/${i+1}.png`" :alt="`Coming Soon ${i}`" class="game-image" />
             </el-card>
           </el-col>
         </el-row>
