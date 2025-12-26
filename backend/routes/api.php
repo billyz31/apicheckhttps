@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SlotController;
 use App\Http\Controllers\Api\DepositController;
 use App\Http\Controllers\Api\HealthController;
+use App\Http\Controllers\Api\AdminController;
 
 
 // 公開路由
